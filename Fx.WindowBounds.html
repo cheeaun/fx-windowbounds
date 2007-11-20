@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Fx.WindowBounds for Adobe AIR windows</title>
+
+<style type="text/css">
+body{ font: 14px sans-serif; } /*better fonts*/
+</style>
+
+<script type="text/javascript" src="AIRAliases.js"></script>
+<script type="text/javascript" src="mootools.js"></script>
+<script type="text/javascript" src="Fx.WindowBounds.js"></script>
+
+<script type="text/javascript">
+window.addEvent('load',function(e){
+	$('debug').setText(nativeWindow);
+	// Switch nativeWindow instances
+	var win = nativeWindow;
+	$('newWin').disabled = true;
+	var newWin;
+	$('new-window').addEvent('click',function(e){
+		newWin = new air.NativeWindow(new air.NativeWindowInitOptions());
+		newWin.title = 'new window';
+		newWin.activate();
+		$('newWin').checked = true;
+		$('newWin').disabled = false;
+		win = newWin;
+
+		newWin.addEventListener(air.Event.CLOSING,function(e){
+			win = nativeWindow;
+			$('newWin').checked = false;
+			$('newWin').disabled = true;
+		});
+	});
+	
+	// Debug
+	(function(){
+		if($defined(win) && !win.closed)
+			$('debug').setHTML('x: ' + win.x + ' y: ' + win.y
+			+ ' width: ' + win.width + ' height: ' + win.height
+			+ ' stageWidth: ' + win.stage.stageWidth + ' stageHeight: ' + win.stage.stageHeight);
+	}).periodical(100);
+
+	// Button events
+	$('newWin').addEvent('click',function(e){
+		if(this.checked && $defined(newWin) && !newWin.closed) win = newWin;
+		else win = nativeWindow;
+	});
+	
+	$('test1').addEvent('click',function(e){
+		var eff1 = new Fx.WindowBounds(win);
+		eff1.boundTo(2,5,400,300);
+	});
+	
+	$('test2').addEvent('click',function(e){
+		var eff2 = new Fx.WindowBounds(win);
+		eff2.boundTo(160,180,win.height,win.width); // switched width and height!
+	});
+	
+	$('test3').addEvent('click',function(e){
+		var eff3 = new Fx.WindowBounds(win);
+		eff3.boundTo('right','bottom',500,350); // humane words for positioning!
+	});
+	
+	$('test4').addEvent('click',function(e){
+		var eff4 = new Fx.WindowBounds(win);
+		eff4.boundTo('center','center',440,470);
+	});
+	
+	$('test5').addEvent('click',function(e){
+		var eff5 = new Fx.WindowBounds(win);
+		eff5.boundTo('center','center','100%','50%'); // percentage values for width/height!
+	});
+	
+	$('test6').addEvent('click',function(e){
+		var eff6 = new Fx.WindowBounds(win);
+		eff6.boundTo('100%','100%','50%','30%'); // percentage values for positining!
+	});
+	
+	$('test7').addEvent('click',function(e){ // includes Fx.Transitions and duration!
+		var eff7 = new Fx.WindowBounds(win,{transition: Fx.Transitions.Elastic.easeOut, duration: 1500});
+		eff7.boundTo('center','center','50%','50%');
+	});
+	
+	$('test8').addEvent('click',function(e){
+		var eff8 = new Fx.WindowBounds(win);
+		eff8.resizeTo(300,300); // only resize, no move
+	});
+	
+	$('test9').addEvent('click',function(e){
+		var eff9 = new Fx.WindowBounds(win);
+		eff9.moveTo('right','top'); // only move, no resize
+	});
+	
+	$('test10').addEvent('click',function(e){ // stage dimension
+		var eff10 = new Fx.WindowBounds(win, {dimension: 'stage'});
+		eff10.boundTo(0,0,'100%','50%');
+	});
+	
+	$('test11').addEvent('click',function(e){
+		var eff11 = new Fx.WindowBounds(win);
+		eff11.set('right','top','20%','100%');
+	});
+	
+	$('test12').addEvent('click',function(e){ // chains!
+		var eff12 = new Fx.WindowBounds(win, {duration: 1000});
+		eff12.boundTo('left','top','20%','100%').chain(function(){
+			eff12.boundTo('50%','50%','50%','50%');
+		}).chain(function(){
+			eff12.boundTo('50%','50%','60%','60%'); // enlarge effect
+		}).chain(function(){
+			eff12.moveTo('center','bottom');
+		}).chain(function(){
+			eff12.resizeTo('30%',win.height);
+		});
+	});
+	
+	$('test13').addEvent('click',function(e){
+		var eff13 = new Fx.WindowBounds(win);
+		eff13.moveToVisibleBounds();
+	});
+});
+
+</script>
+
+</head>
+<body>
+
+<button id="test1">test1</button>
+<button id="test2">test2</button>
+<button id="test3">test3</button>
+<button id="test4">test4</button>
+<button id="test5">test5</button>
+<button id="test6">test6</button>
+<button id="test7">test7</button>
+<button id="test8">test8</button>
+<button id="test9">test9</button>
+<button id="test10">test10</button>
+<button id="test11">test11</button>
+<button id="test12">test12</button>
+<button id="test13">test13</button>
+<hr />
+<label for="newWin"><input type="checkbox" id="newWin" /> new window</label>
+<button id="new-window">new window</button>
+<hr />
+<div id="debug"></div>
+
+</body>
+</html>

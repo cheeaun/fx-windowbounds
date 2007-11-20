@@ -1,0 +1,21 @@
+Fx.WindowBounds Changelog
+-------------------------
+
+0.3.1 (2007-11-20)
+ * Added checkVisibleBounds and moveToVisibleBounds method
+
+0.3 (2007-10-31)
+ * Added resizeTo and moveTo methods
+ * Added option to resize stage width and height instead of nativeWindow
+ * Added chaining
+ * Added set method
+ * Increased fps (frame-per-second) to 200 for smoother animation (experimental)
+ * Improved testcase application
+
+0.2 (2007-10-28)
+ * Fixed some mistakes in the code
+ * Added more percentage values support to all bound properties
+ * Added example to control other nativeWindow instances
+
+0.1 (2007-10-28)
+ * First initial release
